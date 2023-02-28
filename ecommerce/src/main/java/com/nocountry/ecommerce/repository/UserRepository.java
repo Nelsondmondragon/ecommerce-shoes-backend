@@ -10,11 +10,14 @@ import java.util.Optional;
 public interface UserRepository {
 
 
-    AuthenticationResponse register(UserDto userDto);
+//    AuthenticationResponse register(UserDto userDto);
 
+    boolean existsByEmail(String email);
 
     Optional<UserDto> findByEmail(String email);
 
-    AuthenticationResponse authentication(AuthenticationRequest request);
+    UserDto save(UserDto userDto);
+
+//    AuthenticationResponse authentication(AuthenticationRequest request);
 
 }

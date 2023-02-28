@@ -1,8 +1,6 @@
 package com.nocountry.ecommerce.config;
 
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,6 +21,9 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
 
+//    private final UnauthorizedEntryPoint unauthorizedEntryPoint;
+
+//    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -34,9 +35,13 @@ public class SecurityConfig {
         http.cors().and().csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/api/v1/auth/**","/api/v1/products/**")
                 .permitAll()
                 .anyRequest().authenticated()
+//                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(unauthorizedEntryPoint)
+//                .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -47,9 +52,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
 }

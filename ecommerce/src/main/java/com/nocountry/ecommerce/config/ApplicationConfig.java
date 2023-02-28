@@ -1,5 +1,6 @@
 package com.nocountry.ecommerce.config;
 
+import com.nocountry.ecommerce.entities.User;
 import com.nocountry.ecommerce.repository.UserRepository;
 import com.nocountry.ecommerce.repository.jpa.UserRepositoryJpa;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,17 +22,17 @@ public class ApplicationConfig {
 
     private final UserRepositoryJpa userRepositoryJpa;
 
+
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepositoryJpa.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> userRepositoryJpa.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Invalid username or password."));
     }
 
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(this.userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
